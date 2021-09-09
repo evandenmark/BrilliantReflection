@@ -47,6 +47,12 @@ function dragended() {
 
 function updateLaserRotation(angle){
     d3.select("#laserGroupContainer").attr("transform", "rotate ("+(180+angle*180/Math.PI)%360+","+UNIT_LASER_SIZE+","+0+")");
+    d3.select("#degreeText").text(function(){ return 180-Math.abs(Math.round(angleToControl*180/Math.PI)) + String.fromCharCode(176)})
+
+    var controlCircleX = d3.select("#controlCircle").attr('cx');
+    var controlCircleY = d3.select("#controlCircle").attr('cy');
+
+    d3.select("#degreeText").attr('transform', transform(controlCircleX-(LASER_ARC_RADIUS+10), controlCircleY+10))
 }
 
 function fireLaser(){

@@ -104,6 +104,12 @@ function initialLoad(){
                         .on("drag", dragged)
                         .on("end", dragended))
     
+    laserControl.append('text')
+                .attr('class', 'text')
+                .attr("id", "degreeText")
+                .attr('transform', transform(-LASER_ARC_RADIUS*1.2, LASER_ARC_RADIUS/4))
+                .text('')
+    
 
     
     //basic text
@@ -116,7 +122,7 @@ function initialLoad(){
     
 
     interactiveSVG.append('text')
-                    .attr('transform', transform(SCREEN_WIDTH/8, SCREEN_HEIGHT/4))
+                    .attr('transform', transform(SCREEN_WIDTH/10, SCREEN_HEIGHT/4))
                     .attr('class', 'text')
                     .style("text-anchor", "middle")
                     .text("Move your laser!");
