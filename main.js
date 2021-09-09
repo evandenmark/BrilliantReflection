@@ -1,4 +1,3 @@
-
 function initialLoad(){
     //Loads the standard elements of the interactive space
 
@@ -44,7 +43,7 @@ function initialLoad(){
                         .attr("id", "targetGroup");
 
     targetGroup.append("circle")
-                    .attr("fill", 'red')
+                    .attr("fill", '#FF7800')
                     .attr("r", UNIT_BOX_SIZE/15)
                     .attr("id", "outerTarget");
     
@@ -53,7 +52,7 @@ function initialLoad(){
                     .attr("r", UNIT_BOX_SIZE/22);
     
     targetGroup.append("circle")
-                    .attr("fill", 'red')
+                    .attr("fill", '#FF7800')
                     .attr("r", UNIT_BOX_SIZE/32);
     
     
@@ -83,6 +82,7 @@ function initialLoad(){
     var laserControl = mirrorBoxGroup.append("g")
                                     .attr("transform", transform(-UNIT_BOX_SIZE,0));
 
+    //defines the arc of the control                            
     const laserArcControlGenerator = d3.arc()
         .outerRadius(LASER_ARC_RADIUS)
         .innerRadius(LASER_ARC_RADIUS*0.95)
@@ -109,6 +109,12 @@ function initialLoad(){
                 .attr("id", "degreeText")
                 .attr('transform', transform(-LASER_ARC_RADIUS*1.2, LASER_ARC_RADIUS/4))
                 .text('')
+
+    
+    // reflection markers
+    var reflectionMarkers = d3.select("#mirrorBoxGroup").append('g')
+                    .attr("id", 'reflectionMarkers')
+                    .attr("transform", transform(-(UNIT_BOX_SIZE+UNIT_LASER_SIZE),0));
     
 
     
@@ -118,7 +124,7 @@ function initialLoad(){
                     .attr('class', 'text')
                     .attr("id", "main-text")
                     .style("text-anchor", "middle")
-                    .text("In how many places can you point the laser to hit the target?");
+                    .text("Bounce the laser off the mirrors to hit your target!");
     
 
     interactiveSVG.append('text')
@@ -131,7 +137,7 @@ function initialLoad(){
                     .attr('transform', transform(7*SCREEN_WIDTH/8, SCREEN_HEIGHT/4))
                     .attr('class', 'text')
                     .style("text-anchor", "middle")
-                    .text("Unique Mirror Hits:");
+                    .text("Unique Hits:");
 
     interactiveSVG.append('text')
                     .attr('transform', transform(7*SCREEN_WIDTH/8, SCREEN_HEIGHT/4+30))

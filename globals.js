@@ -8,12 +8,9 @@ const LASER_ARC_RADIUS = UNIT_LASER_SIZE*1.5;
 const LASER_ARC_MAX = -15.0/16*Math.PI;
 const LASER_ARC_MIN = -1.0/16*Math.PI;
 
-var angleToControl =Math.PI; 
-var mostRecentFirstReflection;
-var targetHit;
-var numberOfBounces;
-
-var firstLaserShot = false; 
-
-var uniqueHits = [];
+let angleToControl =Math.PI; 
+let mostRecentFirstReflection;
+let targetHit;
+let numberOfBounces;
+let uniqueHits = [];
 
