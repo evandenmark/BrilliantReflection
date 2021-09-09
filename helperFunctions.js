@@ -52,7 +52,7 @@ function updateLaserRotation(angle){
     var controlCircleX = d3.select("#controlCircle").attr('cx');
     var controlCircleY = d3.select("#controlCircle").attr('cy');
 
-    d3.select("#degreeText").attr('transform', transform(controlCircleX-(LASER_ARC_RADIUS+10), controlCircleY+10))
+    d3.select("#degreeText").attr('transform', transform(controlCircleX-(LASER_ARC_RADIUS*1.4), controlCircleY+40))
 }
 
 function fireLaser(){
