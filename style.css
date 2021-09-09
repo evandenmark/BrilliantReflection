@@ -1,0 +1,15 @@
+.mirror{
+    fill: #ADECFF
+}
+
+.text {
+    font-family: "Helvetica";
+}
+
+#main-text {
+    font-size: 24px;
+}
+
+#uniqueHitsNum {
+    font-size: 36px;
+}

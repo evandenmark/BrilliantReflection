@@ -8,7 +8,8 @@ function initialLoad(){
 
 
     var mirrorBoxGroup = interactiveSVG.append("g")
-                            .attr("transform", transform(2*UNIT_BOX_SIZE, UNIT_BOX_SIZE));
+                            .attr("transform", transform(2*UNIT_BOX_SIZE, UNIT_BOX_SIZE))
+                            .attr("id", "mirrorBoxGroup");
 
     //bottom mirror
     mirrorBoxGroup.append("rect")
@@ -44,16 +45,16 @@ function initialLoad(){
 
     targetGroup.append("circle")
                     .attr("fill", 'red')
-                    .attr("r", UNIT_BOX_SIZE/10)
+                    .attr("r", UNIT_BOX_SIZE/15)
                     .attr("id", "outerTarget");
     
     targetGroup.append("circle")
                     .attr("fill", 'white')
-                    .attr("r", UNIT_BOX_SIZE/18);
+                    .attr("r", UNIT_BOX_SIZE/22);
     
     targetGroup.append("circle")
                     .attr("fill", 'red')
-                    .attr("r", UNIT_BOX_SIZE/30);
+                    .attr("r", UNIT_BOX_SIZE/32);
     
     
     //laser
@@ -102,6 +103,36 @@ function initialLoad(){
                         .on("start", dragstarted)
                         .on("drag", dragged)
                         .on("end", dragended))
+    
+
+    
+    //basic text
+    interactiveSVG.append('text')
+                    .attr('transform', transform(SCREEN_WIDTH/2, SCREEN_HEIGHT/16))
+                    .attr('class', 'text')
+                    .attr("id", "main-text")
+                    .style("text-anchor", "middle")
+                    .text("In how many places can you point the laser to hit the target?");
+    
+
+    interactiveSVG.append('text')
+                    .attr('transform', transform(SCREEN_WIDTH/8, SCREEN_HEIGHT/4))
+                    .attr('class', 'text')
+                    .style("text-anchor", "middle")
+                    .text("Move your laser!");
+    
+    interactiveSVG.append('text')
+                    .attr('transform', transform(7*SCREEN_WIDTH/8, SCREEN_HEIGHT/4))
+                    .attr('class', 'text')
+                    .style("text-anchor", "middle")
+                    .text("Unique Mirror Hits:");
+
+    interactiveSVG.append('text')
+                    .attr('transform', transform(7*SCREEN_WIDTH/8, SCREEN_HEIGHT/4+30))
+                    .attr('class', 'text')
+                    .attr('id', 'uniqueHitsNum')
+                    .style("text-anchor", "middle")
+                    .text('0');
 
 
 }

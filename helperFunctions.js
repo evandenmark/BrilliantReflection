@@ -19,6 +19,7 @@ const laserArcControlGenerator = d3.arc()
 function dragstarted() {
     //nothing
     console.log("starting drag")
+    firstLaserShot = true;
   }
 function dragged() {
     //from the center of the laser group
@@ -40,6 +41,7 @@ function dragged() {
 
   }
 function dragended() {
+    console.log("FIRE")
     fireLaser();
   }
 
@@ -48,13 +50,38 @@ function updateLaserRotation(angle){
 }
 
 function fireLaser(){
-    console.log("FIRE");
     //create path
     createLaserPath();
-    //animate path
+
+    //create first reflection dot
+    createReflectionCircle();
+    
+}
+
+function createReflectionCircle(){
+    var reflectionCircles = d3.select("#mirrorBoxGroup").append('g')
+    .attr("id", 'reflectionCircles')
+    .attr("transform", transform(-(UNIT_BOX_SIZE+UNIT_LASER_SIZE),0));
+
+    if (numberOfBounces != 0){
+        var newReflectionCircle = reflectionCircles.append("rect")
+                                .attr('transform', transform(mostRecentFirstReflection[0]-10, mostRecentFirstReflection[1]-2))
+                                .attr('fill', '#686868')
+                                .attr('height', 8)
+                                .transition()
+                                    .duration(500)
+                                    .delay(500)
+                                    .attr("width", 10);
+
+        if (targetHit){
+            newReflectionCircle.attr("fill", '#1EC300');
+        }
+    }
 }
 
 function createLaserPath(){
+    targetHit = false;
+    numberOfBounces = 0;
     var lineFunction = d3.line()
                             .x(function(d) { return d.x; })
                             .y(function(d) { return d.y; });
@@ -66,15 +93,14 @@ function createLaserPath(){
     pathPoints.push(startPoint);
     var currentXPoint = pathPoints[pathPoints.length-1].x;
     var currentYPoint = pathPoints[pathPoints.length-1].y;
+    var reachedFirstReflection = false;
 
     //while the laser hasn't hit the black wall
     while(currentXPoint < 2*UNIT_BOX_SIZE+UNIT_LASER_SIZE){
-        
         //while current bounce is between the mirrors
         while (currentYPoint > -UNIT_BOX_SIZE*(1.0/2-WALL_ASPECT_RATIO) 
             && currentYPoint <  UNIT_BOX_SIZE/2
             && !isWithinTarget(currentXPoint, currentYPoint)){
-                
                 pathPoints.push({
                     "x":currentXPoint+ step*Math.cos(angleFromLaser), 
                     "y":currentYPoint+ step*Math.sin(angleFromLaser)
@@ -84,11 +110,25 @@ function createLaserPath(){
                 if (currentXPoint > 2*UNIT_BOX_SIZE+UNIT_LASER_SIZE){
                     break;
                 }
-
             }
-        //when the inner while loop is exited, the laser has bounced off a wall
-        if (currentXPoint > 2*UNIT_BOX_SIZE+UNIT_LASER_SIZE || isWithinTarget(currentXPoint, currentYPoint)){
+        if (!reachedFirstReflection 
+            && !isWithinTarget(currentXPoint, currentYPoint)
+            && (currentXPoint < 2*UNIT_BOX_SIZE+UNIT_LASER_SIZE)){
+            //this means it has just reflected off its first mirror
+
+            mostRecentFirstReflection = [currentXPoint, currentYPoint]
+            reachedFirstReflection = true;
+        }
+
+        if (currentXPoint > 2*UNIT_BOX_SIZE+UNIT_LASER_SIZE){
             break;
+        }else if (isWithinTarget(currentXPoint, currentYPoint)){
+            targetHit = true;
+            console.log(targetHit);
+            break;
+        } else {
+            //just another bounce
+            numberOfBounces +=1
         }
         angleFromLaser =  Math.atan2(Math.sin(angleFromLaser), Math.cos(angleFromLaser));
         angleFromLaser = -1*angleFromLaser;
@@ -98,27 +138,29 @@ function createLaserPath(){
         
     }
 
+    d3.selectAll(".oldLaserLines").attr("opacity", 0.1);
+
     var lineGraph = d3.select("#laserGroup").append("path")
                     .transition()
                     .duration(1000)
                     .attr("d", lineFunction(pathPoints))
                     .attr("stroke", "red")
                     .attr("stroke-width", 4)
-                    .attr("fill", "none");
+                    .attr("fill", "none")
+                    .attr("class", "oldLaserLines");
 
-    // const totalLength = lineGraph.node().getTotalLength();
-    // console.log(totalLength);
-    // console.log(lineGraph.node());
+    //update the unique hits dict
+    if (angleToControl < 0){
+        numberOfBounces *= -1;
+    }
+    if (!uniqueHits.includes(numberOfBounces) 
+        && numberOfBounces != 0
+        && targetHit){
+        uniqueHits.push(numberOfBounces);
+    }
+    d3.select("#uniqueHitsNum").text(function(){return uniqueHits.length})
 
-    
-    // lineGraph.attr("stroke-dasharray", totalLength + " " + totalLength)
-    //         .attr("stroke-dashoffset", totalLength)
-    //         .transition()
-    //             .ease(d3.easeLinear)
-    //             .attr("stroke-dashoffset", 0)
-    //             .duration(8000);
-
-    
+    console.log(uniqueHits);
 }
 
 function isWithinTarget(currentX, currentY){
@@ -146,5 +188,5 @@ function getTranslation(transform) {
     
     // As per definition values e and f are the ones for the translation.
     return [matrix.e, matrix.f];
-  }
 
+}
