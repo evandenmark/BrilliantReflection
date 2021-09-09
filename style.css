@@ -1,9 +1,7 @@
-.mirror{
-    fill: #ADECFF
-}
-
+/* text */
 .text {
     font-family: "Helvetica";
+    text-anchor: middle;
 }
 
 #main-text {
@@ -12,4 +10,22 @@
 
 #uniqueHitsNum {
     font-size: 36px;
+}
+
+
+/* visual structures */
+.mirror{
+    fill: #ADECFF
+}
+
+.wall{
+    fill: black;
+}
+
+.target {
+    fill: #FF7800;
+}
+
+#controlCircle {
+    fill: gray;
 }

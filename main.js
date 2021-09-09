@@ -7,34 +7,28 @@ function initialLoad(){
 
 
     var mirrorBoxGroup = interactiveSVG.append("g")
-                            .attr("transform", transform(2*UNIT_BOX_SIZE, UNIT_BOX_SIZE))
+                            .attr("transform", transform(MIRROR_LENGTH, UNIT_BOX_SIZE))
                             .attr("id", "mirrorBoxGroup");
 
     //bottom mirror
     mirrorBoxGroup.append("rect")
                     .attr("height", UNIT_BOX_SIZE*WALL_ASPECT_RATIO)
-                    .attr("width", 2*UNIT_BOX_SIZE)
-                    .attr("fill", "blue")
+                    .attr("width", MIRROR_LENGTH)
                     .attr("class", "mirror")
-                    .attr("id", "bottomMirror")
                     .attr("transform", transform(-UNIT_BOX_SIZE, UNIT_BOX_SIZE/2));
     
     //top mirror
     mirrorBoxGroup.append("rect")
                     .attr("height", UNIT_BOX_SIZE*WALL_ASPECT_RATIO)
-                    .attr("width", 2*UNIT_BOX_SIZE)
-                    .attr("fill", "blue")
+                    .attr("width", MIRROR_LENGTH)
                     .attr("class", "mirror")
-                    .attr("id", "topMirror")
                     .attr("transform", transform(-UNIT_BOX_SIZE, -1*UNIT_BOX_SIZE/2));
 
     //right wall
     mirrorBoxGroup.append("rect")
                     .attr("height", UNIT_BOX_SIZE*(1+WALL_ASPECT_RATIO))
                     .attr("width", UNIT_BOX_SIZE*WALL_ASPECT_RATIO)
-                    .attr("fill", "black")
                     .attr("class", "wall")
-                    .attr("id", "rightWall")
                     .attr("transform", transform(UNIT_BOX_SIZE, -UNIT_BOX_SIZE/2));
 
     //target
@@ -43,17 +37,17 @@ function initialLoad(){
                         .attr("id", "targetGroup");
 
     targetGroup.append("circle")
-                    .attr("fill", '#FF7800')
-                    .attr("r", UNIT_BOX_SIZE/15)
+                    .attr("r", OUTER_TARGET_SIZE)
+                    .attr("class", 'target')
                     .attr("id", "outerTarget");
     
     targetGroup.append("circle")
                     .attr("fill", 'white')
-                    .attr("r", UNIT_BOX_SIZE/22);
+                    .attr("r", MIDDLE_TARGET_SIZE);
     
     targetGroup.append("circle")
-                    .attr("fill", '#FF7800')
-                    .attr("r", UNIT_BOX_SIZE/32);
+                    .attr("class", 'target')
+                    .attr("r", INNER_TARGET_SIZE);
     
     
     //laser
@@ -80,14 +74,7 @@ function initialLoad(){
 
     //laser control
     var laserControl = mirrorBoxGroup.append("g")
-                                    .attr("transform", transform(-UNIT_BOX_SIZE,0));
-
-    //defines the arc of the control                            
-    const laserArcControlGenerator = d3.arc()
-        .outerRadius(LASER_ARC_RADIUS)
-        .innerRadius(LASER_ARC_RADIUS*0.95)
-        .startAngle(-15.0/16*Math.PI)
-        .endAngle(-1.0/16*Math.PI);
+                                    .attr("transform", transform(-UNIT_BOX_SIZE,0)); 
 
     const laserControlArc = laserControl.append("path")
             .attr("d", laserArcControlGenerator())
@@ -95,7 +82,6 @@ function initialLoad(){
             .attr("opacity", 0.2);
     
     laserControl.append("circle")
-                    .attr("fill", "gray")
                     .attr('r', LASER_HEIGHT)
                     .attr('transform', transform(-LASER_ARC_RADIUS, 0))
                     .attr("id", 'controlCircle')
@@ -120,30 +106,26 @@ function initialLoad(){
     
     //basic text
     interactiveSVG.append('text')
-                    .attr('transform', transform(SCREEN_WIDTH/2, SCREEN_HEIGHT/16))
+                    .attr('transform', transform(HALF_SCREEN_WIDTH, EIGHTH_SCREEN_HEIGHT))
                     .attr('class', 'text')
                     .attr("id", "main-text")
-                    .style("text-anchor", "middle")
                     .text("Bounce the laser off the mirrors to hit your target!");
     
 
     interactiveSVG.append('text')
-                    .attr('transform', transform(SCREEN_WIDTH/10, SCREEN_HEIGHT/4))
+                    .attr('transform', transform(SCREEN_WIDTH/10, HALF_SCREEN_HEIGHT))
                     .attr('class', 'text')
-                    .style("text-anchor", "middle")
                     .text("Move your laser!");
     
     interactiveSVG.append('text')
-                    .attr('transform', transform(7*SCREEN_WIDTH/8, SCREEN_HEIGHT/4))
+                    .attr('transform', transform(7*EIGHTH_SCREEN_WIDTH, HALF_SCREEN_HEIGHT))
                     .attr('class', 'text')
-                    .style("text-anchor", "middle")
                     .text("Unique Hits:");
 
     interactiveSVG.append('text')
-                    .attr('transform', transform(7*SCREEN_WIDTH/8, SCREEN_HEIGHT/4+30))
+                    .attr('transform', transform(7*EIGHTH_SCREEN_WIDTH, HALF_SCREEN_HEIGHT+30))
                     .attr('class', 'text')
                     .attr('id', 'uniqueHitsNum')
-                    .style("text-anchor", "middle")
                     .text('0');
 
 
